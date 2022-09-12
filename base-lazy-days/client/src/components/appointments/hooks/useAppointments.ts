@@ -1,7 +1,7 @@
 // @ts-nocheck
 import dayjs from 'dayjs';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { useQuery } from 'react-query';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
 import { axiosInstance } from '../../../axiosInstance';
 import { queryKeys } from '../../../react-query/constants';
@@ -21,6 +21,7 @@ async function getAppointments(
 
 // types for hook return object
 interface UseAppointments {
+  usePrefetchAppointments: (monthYear: MonthYear) => void;
   appointments: AppointmentDateMap;
   monthYear: MonthYear;
   updateMonthYear: (monthIncrement: number) => void;
@@ -78,5 +79,21 @@ export function useAppointments(): UseAppointments {
 
   /** ****************** END 3: useQuery  ******************************* */
 
-  return { appointments, monthYear, updateMonthYear, showAll, setShowAll };
+  // prefetch appointments
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const nextMonthYear = getNewMonthYear(monthYear, 1);
+    queryClient.prefetchQuery(
+      [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
+      () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+    );
+  }, [monthYear, queryClient]);
+
+  return {
+    appointments,
+    monthYear,
+    updateMonthYear,
+    showAll,
+    setShowAll,
+  };
 }
