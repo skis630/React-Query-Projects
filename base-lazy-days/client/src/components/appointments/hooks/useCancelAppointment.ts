@@ -16,18 +16,15 @@ export function useCancelAppointment(): (appointment: Appointment) => void {
   const toast = useCustomToast();
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation(
-    (appointment: Appointment) => removeAppointmentUser(appointment),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([queryKeys.appointments]);
-        toast({
-          status: 'success',
-          title: 'Appointment cancelled',
-        });
-      },
+  const { mutate } = useMutation(removeAppointmentUser, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.appointments]);
+      toast({
+        status: 'success',
+        title: 'Appointment cancelled',
+      });
     },
-  );
+  });
 
   return mutate;
 }
