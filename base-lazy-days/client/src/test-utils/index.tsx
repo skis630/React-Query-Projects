@@ -7,7 +7,7 @@ import { generateQueryClient } from '../react-query/queryClient';
 
 setLogger({
   log: console.log,
-  warn: console.log,
+  warn: console.warn,
   error: () => {
     // swallow errors without printing out
   },
@@ -18,6 +18,7 @@ const generateTestQueryClient = () => {
   const client = generateQueryClient();
   const options = client.getDefaultOptions();
   options.queries = { ...options.queries, retry: false };
+  client.setDefaultOptions(options);
   return client;
 };
 
