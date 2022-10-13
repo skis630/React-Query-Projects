@@ -3,11 +3,11 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { UserAppointments } from 'components/user/UserAppointments';
 import { MemoryRouter } from 'react-router-dom';
 
 import { mockUser } from '../../../mocks/mockData';
 import { renderWithQueryClient } from '../../../test-utils';
+import { UserAppointments } from '../../user/UserAppointments';
 import { Calendar } from '../Calendar';
 
 // mocking useUser to mimic a logged-in user
