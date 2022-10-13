@@ -3,6 +3,7 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import { UserAppointments } from 'components/user/UserAppointments';
 import { MemoryRouter } from 'react-router-dom';
 
 import { mockUser } from '../../../mocks/mockData';
@@ -41,9 +42,25 @@ test('Reserve appointment', async () => {
 });
 
 test('Cancel appointment', async () => {
-  // your test here
-  //
-  // const cancelButtons = await screen.findAllByRole('button', {
-  //   name: /cancel appointment/i,
-  //  });
+  renderWithQueryClient(
+    <MemoryRouter>
+      <UserAppointments />
+    </MemoryRouter>,
+  );
+
+  const cancelButtons = await screen.findAllByRole('button', {
+    name: /cancel appointment/i,
+  });
+
+  // click on the first one to cancel
+  cancelButtons[0].click();
+
+  // check for the toast alert
+  const alertToast = await screen.findByRole('alert');
+  expect(alertToast).toHaveTextContent('cancel');
+
+  // close alert to keep state clean and wait for it to disappear
+  const alertCloseButton = screen.getByRole('button', { name: 'Close' });
+  alertCloseButton.click();
+  await waitForElementToBeRemoved(alertToast);
 });
