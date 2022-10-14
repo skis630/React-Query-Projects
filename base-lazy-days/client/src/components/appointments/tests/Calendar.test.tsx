@@ -1,6 +1,8 @@
 import { screen } from '@testing-library/react';
 import { rest } from 'msw';
+import { MemoryRouter } from 'react-router-dom';
 
+import { handlers } from '../../../mocks/handlers';
 import { mockUser } from '../../../mocks/mockData';
 import { server } from '../../../mocks/server';
 // import { defaultQueryClientOptions } from '../../../react-query/queryClient';
@@ -22,9 +24,14 @@ test('Reserve appointment error', async () => {
         return res(ctx.status(500));
       },
     ),
+    ...handlers,
   );
 
-  renderWithQueryClient(<Calendar />);
+  renderWithQueryClient(
+    <MemoryRouter>
+      <Calendar />
+    </MemoryRouter>,
+  );
 
   // check for toast alert
   const alertToast = await screen.findByRole('alert');
